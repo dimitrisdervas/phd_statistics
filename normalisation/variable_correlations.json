@@ -1,0 +1,32 @@
+[
+  {
+    "variable1": "Recovery_Hours_per_Night",
+    "variable2": "Training_Hours_per_Week",
+    "correlation": 0.031083312898714334
+  },
+  {
+    "variable1": "Recovery_Hours_per_Night",
+    "variable2": "Sprint_Time_sec",
+    "correlation": -0.10790128302636026
+  },
+  {
+    "variable1": "Recovery_Hours_per_Night",
+    "variable2": "Endurance_Test_Score",
+    "correlation": 0.08016007042969131
+  },
+  {
+    "variable1": "Training_Hours_per_Week",
+    "variable2": "Sprint_Time_sec",
+    "correlation": -0.12730684854523894
+  },
+  {
+    "variable1": "Training_Hours_per_Week",
+    "variable2": "Endurance_Test_Score",
+    "correlation": 0.04126356790718188
+  },
+  {
+    "variable1": "Sprint_Time_sec",
+    "variable2": "Endurance_Test_Score",
+    "correlation": 0.05560399817024627
+  }
+]

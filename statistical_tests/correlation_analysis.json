@@ -1,0 +1,17 @@
+{
+  "Recovery_Hours_per_Night": {
+    "Injury_Rate": 0.1953450124365635,
+    "Training_Hours_per_Week": 0.041586317572377976,
+    "Sprint_Time_sec": -0.13315781442848149
+  },
+  "Training_Hours_per_Week": {
+    "Injury_Rate": -0.003974156384822578,
+    "Recovery_Hours_per_Night": 0.041586317572377976,
+    "Sprint_Time_sec": -0.14741332983621686
+  },
+  "Sprint_Time_sec": {
+    "Injury_Rate": -0.025636285836341866,
+    "Recovery_Hours_per_Night": -0.13315781442848149,
+    "Training_Hours_per_Week": -0.14741332983621686
+  }
+}

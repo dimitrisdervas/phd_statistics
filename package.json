@@ -10,6 +10,9 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "papaparse": "^5.5.1"
+    "lodash": "^4.17.21",
+    "papaparse": "^5.5.1",
+    "react": "^19.0.0",
+    "recharts": "^2.15.0"
   }
 }

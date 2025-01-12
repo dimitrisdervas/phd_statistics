@@ -1,0 +1,80 @@
+{
+  "beforeImputation": {
+    "numeric": {
+      "Age": {
+        "mean": 28.176056338028168,
+        "std": 6.235178816206112
+      },
+      "Height_cm": {
+        "mean": 169.96378169014085,
+        "std": 10.902147600885606
+      },
+      "Weight_kg": {
+        "mean": 69.04712463640844,
+        "std": 15.726840335931083
+      },
+      "Training_Hours_per_Week": {
+        "mean": 12.492957746478874,
+        "std": 4.263745755958495
+      },
+      "Sprint_Time_sec": {
+        "mean": 11.825422535211274,
+        "std": 1.3099659296931934
+      },
+      "Endurance_Test_Score": {
+        "mean": 71.5,
+        "std": 17.55223592353672
+      },
+      "Motivation_Score": {
+        "mean": 75.65492957746478,
+        "std": 14.096271495167198
+      },
+      "Recovery_Hours_per_Night": {
+        "mean": 6.960140845070424,
+        "std": 1.1910836502331845
+      },
+      "Coach_Experience_Years": {
+        "mean": 14.47887323943662,
+        "std": 8.575857292881887
+      },
+      "Team_Cohesion_Score": {
+        "mean": 75.28169014084507,
+        "std": 15.492099848206639
+      },
+      "Mental_Resilience": {
+        "mean": 79.16901408450704,
+        "std": 11.575211390997595
+      },
+      "Nutrition_Adherence": {
+        "mean": 71.88028169014085,
+        "std": 13.63016662312577
+      },
+      "Physiotherapy_Sessions": {
+        "mean": 4.859154929577465,
+        "std": 2.7796837121113462
+      }
+    },
+    "categorical": {
+      "Gender": {
+        "Female": 74,
+        "Male": 68
+      },
+      "Diet_Quality": {
+        "Low": 45,
+        "Moderate": 44,
+        "High": 53
+      },
+      "Equipment_Quality": {
+        "Moderate": 41,
+        "High": 57,
+        "Low": 44
+      },
+      "Injury_Rate": {
+        "Medium": 51,
+        "High": 41,
+        "Low": 50
+      }
+    }
+  },
+  "totalRecords": 150
+}

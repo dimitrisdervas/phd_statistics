@@ -6,7 +6,8 @@ import DistributionAnalysis from './components/DistributionAnalysis';
 import NormalizationDensityPlots from './components/NormalizationDensityPlots';
 import CorrelationMatrixVisualization from './components/CorrelationMatrixVisualization';
 import SleepInjuryRelationshipPlot from './components/SleepInjuryRelationshipPlot';
-// Then use it in your component:
+import TrainingLoadInteractionPlot from './components/TrainingLoadInteractionPlot';
+import MediationAnalysisDiagram from './components/MediationAnalysisDiagram'; 
 
 
 function App() {
@@ -19,6 +20,8 @@ function App() {
       <NormalizationDensityPlots />
       <CorrelationMatrixVisualization />
 <SleepInjuryRelationshipPlot />
+<TrainingLoadInteractionPlot />
+<MediationAnalysisDiagram />
     </div>
   );
 }

@@ -11,11 +11,11 @@ function ensureDirectoryExists(dirPath) {
     }
 }
 
-// Function to read and clean data
+// Function to read and process data
 async function cleanAndAnalyzeData() {
     try {
-        // Create cleaned_data directory
-        const outputDir = path.join(__dirname, 'cleaned_data');
+        // Create output directory
+        const outputDir = path.join(__dirname, '/cleaned_data/processed_data');
         ensureDirectoryExists(outputDir);
 
         // Read the CSV file
@@ -25,64 +25,107 @@ async function cleanAndAnalyzeData() {
             header: true,
             dynamicTyping: true,
             complete: function(results) {
-                // 1. Initial data
                 let data = results.data;
+                
+                // Remove any empty rows
+                data = data.filter(row => Object.values(row).some(value => value !== null));
                 console.log("Initial data count:", data.length);
 
-                // 2. Remove rows with missing values
-                data = data.filter(row => 
-                    row.Recovery_Hours_per_Night != null &&
-                    row.Training_Hours_per_Week != null &&
-                    row.Sprint_Time_sec != null &&
-                    row.Endurance_Test_Score != null &&
-                    row.Weight_kg != null &&
-                    row.Injury_Rate != null
-                );
-                console.log("Data count after removing missing values:", data.length);
+                // Define column types
+                const numericColumns = [
+                    'Age', 'Height_cm', 'Weight_kg', 'Training_Hours_per_Week',
+                    'Sprint_Time_sec', 'Endurance_Test_Score', 'Motivation_Score',
+                    'Recovery_Hours_per_Night', 'Coach_Experience_Years',
+                    'Team_Cohesion_Score', 'Mental_Resilience', 'Nutrition_Adherence',
+                    'Physiotherapy_Sessions'
+                ];
+                
+                const categoricalColumns = [
+                    'Gender', 'Diet_Quality', 'Equipment_Quality', 'Injury_Rate'
+                ];
 
-                // 3. Remove weight outliers
-                data = data.filter(row => row.Weight_kg > 25.21 && row.Weight_kg < 115.15);
-                console.log("Data count after removing outliers:", data.length);
-
-                // 4. Calculate and display statistics
-                const calculateStats = (values) => {
+                // Calculate statistics before imputation
+                console.log("\nStatistics before imputation:");
+                const beforeStats = {};
+                
+                // Numeric variables statistics
+                numericColumns.forEach(col => {
+                    const values = data.map(row => row[col]).filter(val => val !== null);
                     const mean = values.reduce((a, b) => a + b, 0) / values.length;
-                    const variance = values.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / values.length;
-                    return {
-                        mean: mean.toFixed(2),
-                        std: Math.sqrt(variance).toFixed(2),
-                        min: Math.min(...values).toFixed(2),
-                        max: Math.max(...values).toFixed(2)
-                    };
-                };
+                    const std = Math.sqrt(values.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / values.length);
+                    beforeStats[col] = { mean, std };
+                    console.log(`${col}: Mean = ${mean.toFixed(2)}, SD = ${std.toFixed(2)}`);
+                });
 
-                // Calculate stats for key variables
-                const recoveryStats = calculateStats(data.map(row => row.Recovery_Hours_per_Night));
-                const trainingStats = calculateStats(data.map(row => row.Training_Hours_per_Week));
-                const sprintStats = calculateStats(data.map(row => row.Sprint_Time_sec));
+                // Categorical variables frequencies
+                const beforeCategorical = {};
+                categoricalColumns.forEach(col => {
+                    const counts = {};
+                    data.forEach(row => {
+                        if (row[col]) {
+                            counts[row[col]] = (counts[row[col]] || 0) + 1;
+                        }
+                    });
+                    beforeCategorical[col] = counts;
+                    console.log(`\n${col} distribution:`, counts);
+                });
 
-                console.log("\nCleaned Data Statistics:");
-                console.log("\nRecovery Hours:");
-                console.log(recoveryStats);
-                console.log("\nTraining Hours:");
-                console.log(trainingStats);
-                console.log("\nSprint Time:");
-                console.log(sprintStats);
+                // Impute missing values
+                data = data.map(row => {
+                    const newRow = {...row};
+                    
+                    // Impute numeric variables with mean
+                    numericColumns.forEach(col => {
+                        if (!newRow[col]) {
+                            newRow[col] = beforeStats[col].mean;
+                        }
+                    });
+                    
+                    // Impute categorical variables with mode
+                    categoricalColumns.forEach(col => {
+                        if (!newRow[col]) {
+                            const mode = Object.entries(beforeCategorical[col])
+                                .reduce((a, b) => (a[1] > b[1] ? a : b))[0];
+                            newRow[col] = mode;
+                        }
+                    });
+                    
+                    return newRow;
+                });
 
-                // 5. Export cleaned data to CSV in cleaned_data folder
-                const cleanedCsvPath = path.join(outputDir, 'cleaned_athlete_data.csv');
-                const cleanedCsv = Papa.unparse(data);
-                fs.writeFileSync(cleanedCsvPath, cleanedCsv);
-                console.log(`\nCleaned data has been exported to ${cleanedCsvPath}`);
+                // Calculate statistics after imputation
+                console.log("\nStatistics after imputation:");
+                numericColumns.forEach(col => {
+                    const values = data.map(row => row[col]);
+                    const mean = values.reduce((a, b) => a + b, 0) / values.length;
+                    const std = Math.sqrt(values.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / values.length);
+                    console.log(`${col}: Mean = ${mean.toFixed(2)}, SD = ${std.toFixed(2)}`);
+                });
 
-                // 6. Export summary statistics to JSON in cleaned_data folder
+                categoricalColumns.forEach(col => {
+                    const counts = {};
+                    data.forEach(row => {
+                        counts[row[col]] = (counts[row[col]] || 0) + 1;
+                    });
+                    console.log(`\n${col} distribution after:`, counts);
+                });
+
+                // Export processed data
+                const processedCsvPath = path.join(outputDir, 'processed_athlete_data.csv');
+                const processedCsv = Papa.unparse(data);
+                fs.writeFileSync(processedCsvPath, processedCsv);
+                console.log(`\nProcessed data has been exported to ${processedCsvPath}`);
+
+                // Export summary statistics
                 const summaryStats = {
-                    recoveryStats,
-                    trainingStats,
-                    sprintStats,
+                    beforeImputation: {
+                        numeric: beforeStats,
+                        categorical: beforeCategorical
+                    },
                     totalRecords: data.length
                 };
-                const summaryStatsPath = path.join(outputDir, 'summary_statistics.json');
+                
+                const summaryStatsPath = path.join(outputDir, 'imputation_summary.json');
                 fs.writeFileSync(summaryStatsPath, JSON.stringify(summaryStats, null, 2));
                 console.log(`Summary statistics have been exported to ${summaryStatsPath}`);
             }
